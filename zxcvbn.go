@@ -3,10 +3,10 @@ package zxcvbn
 import (
 	"time"
 
-	"github.com/nbutton23/zxcvbn-go/match"
-	"github.com/nbutton23/zxcvbn-go/matching"
-	"github.com/nbutton23/zxcvbn-go/scoring"
-	"github.com/nbutton23/zxcvbn-go/utils/math"
+	"github.com/status-im/zxcvbn-go/match"
+	"github.com/status-im/zxcvbn-go/matching"
+	"github.com/status-im/zxcvbn-go/scoring"
+	"github.com/status-im/zxcvbn-go/utils/math"
 )
 
 // PasswordStrength takes a password, userInputs and optional filters and returns a MinEntropyMatch

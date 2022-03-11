@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nbutton23/zxcvbn-go"
+	"github.com/status-im/zxcvbn-go"
 )
 
 func main() {

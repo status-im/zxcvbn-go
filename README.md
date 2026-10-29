@@ -59,6 +59,21 @@ Project Status
 Use zxcvbn_test.go to check how close to feature parity the project is.
 
 ------------------------------------------------------------------------
+Generated data
+------------------------------------------------------------------------
+
+The frequency lists live in internal/dictionary/lists/*.json and are compiled into
+constant tables, internal/dictionary/dictionaries_gen.go. The adjacency graphs live in
+data/data/*.json and are embedded in data/bindata.go (go-bindata v3.1.2). After editing
+either, regenerate with:
+
+    go generate ./data ./internal/dictionary
+
+testdata/parity_golden*.json pin PasswordStrength results; see TestParity in
+parity_test.go for how they were generated. Regenerate them on arm64: amd64 gives
+ULP-different floats (the comparison tolerance accepts either).
+
+------------------------------------------------------------------------
 Acknowledgment
 ------------------------------------------------------------------------
 

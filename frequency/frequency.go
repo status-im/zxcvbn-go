@@ -1,50 +1,30 @@
+// Package frequency gives read-only access to the ranked frequency lists the
+// dictionary matchers use.
 package frequency
 
 import (
-	"encoding/json"
-	"log"
+	"strings"
 
-	"github.com/status-im/zxcvbn-go/data"
+	"github.com/status-im/zxcvbn-go/internal/dictionary"
 )
 
-// List holds a frequency list
-type List struct {
-	Name string
-	List []string
-}
-
-// Lists holds all the frequency list in a map
-var Lists = make(map[string]List)
-
-func init() {
-	maleFilePath := getAsset("data/MaleNames.json")
-	femaleFilePath := getAsset("data/FemaleNames.json")
-	surnameFilePath := getAsset("data/Surnames.json")
-	englishFilePath := getAsset("data/English.json")
-	passwordsFilePath := getAsset("data/Passwords.json")
-
-	Lists["MaleNames"] = getStringListFromAsset(maleFilePath, "MaleNames")
-	Lists["FemaleNames"] = getStringListFromAsset(femaleFilePath, "FemaleNames")
-	Lists["Surname"] = getStringListFromAsset(surnameFilePath, "Surname")
-	Lists["English"] = getStringListFromAsset(englishFilePath, "English")
-	Lists["Passwords"] = getStringListFromAsset(passwordsFilePath, "Passwords")
-
-}
-func getAsset(name string) []byte {
-	data, err := data.Asset(name)
-	if err != nil {
-		panic("Error getting asset " + name)
+// Names returns the names of the frequency lists, in the order the dictionary matchers
+// run.
+func Names() []string {
+	names := make([]string, len(dictionary.All))
+	for i := range dictionary.All {
+		names[i] = dictionary.All[i].Name
 	}
-
-	return data
+	return names
 }
-func getStringListFromAsset(data []byte, name string) List {
 
-	var tempList List
-	err := json.Unmarshal(data, &tempList)
-	if err != nil {
-		log.Fatal(err)
+// Lookup returns the rank of word, lowercased, in the named list, 1 being the most
+// frequent.
+func Lookup(list, word string) (rank int, ok bool) {
+	for i := range dictionary.All {
+		if d := &dictionary.All[i]; d.Name == list {
+			return d.Lookup(strings.ToLower(word))
+		}
 	}
-	tempList.Name = name
-	return tempList
+	return 0, false
 }

@@ -4,7 +4,7 @@ import (
 	"sort"
 
 	"github.com/status-im/zxcvbn-go/adjacency"
-	"github.com/status-im/zxcvbn-go/frequency"
+	"github.com/status-im/zxcvbn-go/internal/dictionary"
 	"github.com/status-im/zxcvbn-go/match"
 )
 
@@ -30,8 +30,7 @@ func Omnimatch(password string, userInputs []string, filters ...func(match.Match
 	}
 
 	if userInputs != nil {
-		userInputMatcher := buildDictMatcher("user_inputs", buildRankedDict(userInputs))
-		matches = userInputMatcher(password)
+		matches = userInputsMatch(password, buildRankedDict(userInputs))
 	}
 
 	for _, matcher := range matchers {
@@ -52,8 +51,9 @@ func Omnimatch(password string, userInputs []string, filters ...func(match.Match
 
 func loadFrequencyList() {
 
-	for n, list := range frequency.Lists {
-		dictionaryMatchers = append(dictionaryMatchers, match.Matcher{MatchingFunc: buildDictMatcher(n, buildRankedDict(list.List)), ID: n})
+	for i := range dictionary.All {
+		dict := &dictionary.All[i]
+		dictionaryMatchers = append(dictionaryMatchers, match.Matcher{MatchingFunc: buildDictMatcher(dict), ID: dict.Name})
 	}
 
 	l33tTable = adjacency.GraphMap["l33t"]
